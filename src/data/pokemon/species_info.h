@@ -4,7 +4,7 @@
 
 #define OLD_UNOWN_SPECIES_INFO                                                          \
     {                                                                                   \
-        .baseHP = 50,                                                                   \
+        .baseHP = 60,                                                                   \
         .baseAttack = 160,                                                              \
         .baseDefense = 50,                                                              \
         .baseSpeed = 150,                                                               \
