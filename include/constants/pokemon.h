@@ -10,17 +10,17 @@
 #define TYPE_GROUND           4
 #define TYPE_ROCK             5
 #define TYPE_BUG              6
-#define TYPE_GHOST            7
+#define TYPE_DARK             7
 #define TYPE_STEEL            8
-#define TYPE_MYSTERY          9
-#define TYPE_FIRE             10
-#define TYPE_WATER            11
-#define TYPE_GRASS            12
-#define TYPE_ELECTRIC         13
-#define TYPE_PSYCHIC          14
-#define TYPE_ICE              15
-#define TYPE_DRAGON           16
-#define TYPE_DARK             17
+#define TYPE_DRAGON           9
+#define TYPE_MYSTERY          10
+#define TYPE_FIRE             11
+#define TYPE_WATER            12
+#define TYPE_GRASS            13
+#define TYPE_ELECTRIC         14
+#define TYPE_PSYCHIC          15
+#define TYPE_ICE              16
+#define TYPE_GHOST            17
 #define NUMBER_OF_MON_TYPES   18
 
 // Pokémon egg groups
@@ -91,7 +91,7 @@
 #define MAX_STAT_STAGE    12
 
 // Shiny odds
-#define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
+#define SHINY_ODDS 8192 // Actual probability is SHINY_ODDS/65536
 
 // Ribbon IDs used by TV and Pokénav
 #define CHAMPION_RIBBON       0
