@@ -5985,6 +5985,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
             evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpDefense * multiplier;
             break;
         }
+        evIncrease = 0;
 
         heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
         if (heldItem == ITEM_ENIGMA_BERRY)
