@@ -48,6 +48,9 @@
 #include "constants/trainers.h"
 #include "constants/union_room.h"
 
+// new code: need flags in order to tell gym badges
+#include "constants/flags.h"
+
 #define DAY_EVO_HOUR_BEGIN       12
 #define DAY_EVO_HOUR_END         HOURS_PER_DAY
 
@@ -4888,9 +4891,20 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
             if ((itemEffect[i] & ITEM3_LEVEL_UP)
              && GetMonData(mon, MON_DATA_LEVEL, NULL) != MAX_LEVEL)
             {
-                dataUnsigned = gExperienceTables[gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES, NULL)].growthRate][GetMonData(mon, MON_DATA_LEVEL, NULL) + 1];
-                SetMonData(mon, MON_DATA_EXP, &dataUnsigned);
-                CalculateMonStats(mon);
+                u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
+                u8 Level = GetMonData(mon, MON_DATA_LEVEL, NULL);
+                u8 badgeCount = 0;
+                for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+                {
+                    if (FlagGet(i))
+                        badgeCount++;
+                }
+
+                if (Level < LevelCaps[badgeCount]) {
+                    dataUnsigned = gExperienceTables[gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES, NULL)].growthRate][GetMonData(mon, MON_DATA_LEVEL, NULL) + 1];
+                    SetMonData(mon, MON_DATA_EXP, &dataUnsigned);
+                    CalculateMonStats(mon);
+                }
                 retVal = FALSE;
             }
 

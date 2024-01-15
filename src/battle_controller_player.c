@@ -36,6 +36,9 @@
 #include "constants/trainers.h"
 #include "constants/rgb.h"
 
+#include "constants/flags.h"
+#include "event_data.h"
+
 static void PlayerHandleGetMonData(void);
 static void PlayerHandleSetMonData(void);
 static void PlayerHandleSetRawMonData(void);
@@ -1157,14 +1160,27 @@ static void Task_GiveExpToMon(u8 taskId)
     u8 battlerId = gTasks[taskId].tExpTask_battler;
     s16 gainedExp = gTasks[taskId].tExpTask_gainedExp;
 
+    u8 badgeCount = 0;
+    s32 i;
+    for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+    {
+        if (FlagGet(i))
+            badgeCount++;
+    }
+
     if (IsDoubleBattle() == TRUE || monId != gBattlerPartyIndexes[battlerId]) // Give exp without moving the expbar.
     {
         struct Pokemon *mon = &gPlayerParty[monId];
+        u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
         u16 species = GetMonData(mon, MON_DATA_SPECIES);
         u8 level = GetMonData(mon, MON_DATA_LEVEL);
         u32 currExp = GetMonData(mon, MON_DATA_EXP);
         u32 nextLvlExp = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1];
 
+        if (level >= LevelCaps[badgeCount]){
+            gainedExp = 0;
+        }
+        
         if (currExp + gainedExp >= nextLvlExp)
         {
             u8 savedActiveBattler;
@@ -1228,6 +1244,14 @@ static void Task_GiveExpWithExpBar(u8 taskId)
         s16 gainedExp = gTasks[taskId].tExpTask_gainedExp;
         u8 battlerId = gTasks[taskId].tExpTask_battler;
         s16 newExpPoints;
+        u8 badgeCount = 0;
+        s32 i;
+        u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
+        for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+        {
+            if (FlagGet(i))
+                badgeCount++;
+        }
 
         newExpPoints = MoveBattleBar(battlerId, gHealthboxSpriteIds[battlerId], EXP_BAR, 0);
         SetHealthboxSpriteVisible(gHealthboxSpriteIds[battlerId]);
@@ -1243,6 +1267,8 @@ static void Task_GiveExpWithExpBar(u8 taskId)
             currExp = GetMonData(&gPlayerParty[monId], MON_DATA_EXP);
             species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
             expOnNextLvl = gExperienceTables[gSpeciesInfo[species].growthRate][level + 1];
+
+            if (level >= LevelCaps[badgeCount]){gainedExp = 0;}
 
             if (currExp + gainedExp >= expOnNextLvl)
             {
@@ -2726,8 +2752,15 @@ static void PlayerHandleHealthBarUpdate(void)
 static void PlayerHandleExpUpdate(void)
 {
     u8 monId = gBattleBufferA[gActiveBattler][1];
+    u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
+    u8 badgeCount = 0;
+    s32 i;
+    for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+    {
+        if (FlagGet(i)){badgeCount++;}
+    }
 
-    if (GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL) >= MAX_LEVEL)
+    if (GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL) >= MAX_LEVEL || GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL) >= LevelCaps[badgeCount])
     {
         PlayerBufferExecCompleted();
     }
@@ -2739,6 +2772,9 @@ static void PlayerHandleExpUpdate(void)
         LoadBattleBarGfx(1);
         GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);  // Unused return value.
         expPointsToGive = T1_READ_16(&gBattleBufferA[gActiveBattler][2]);
+        if (GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL) >= LevelCaps[badgeCount]){
+            expPointsToGive = 0;
+        }
         taskId = CreateTask(Task_GiveExpToMon, 10);
         gTasks[taskId].tExpTask_monId = monId;
         gTasks[taskId].tExpTask_gainedExp = expPointsToGive;
