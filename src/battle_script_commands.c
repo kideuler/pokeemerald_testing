@@ -3277,14 +3277,7 @@ static void Cmd_getexp(void)
         {
             u16 calculatedExp;
             s32 viaSentIn;
-            u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
-            u8 badgeCount = 0;
             u8 GetExp = 1;
-            s32 i;
-            for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
-            {
-                if (FlagGet(i)){badgeCount++;}
-            }
 
             for (viaSentIn = 0, i = 0; i < PARTY_SIZE; i++)
             {
@@ -3303,7 +3296,7 @@ static void Cmd_getexp(void)
                 if (holdEffect == HOLD_EFFECT_EXP_SHARE)
                     viaExpShare++;
                 
-                if ((gBitTable[i] & sentIn) && GetMonData(&gPlayerParty[i], MON_DATA_LEVEL) >= LevelCaps[badgeCount])
+                if ((gBitTable[i] & sentIn) && GetMonData(&gPlayerParty[i], MON_DATA_LEVEL) >= GetCurrentLevelCap())
                     GetExp = 0;
             }
             

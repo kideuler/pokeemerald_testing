@@ -85,6 +85,17 @@ EWRAM_DATA static struct MonSpritesGfxManager *sMonSpritesGfxManagers[MON_SPR_GF
 
 #include "data/battle_moves.h"
 
+u8 GetCurrentLevelCap(void){
+    u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
+    u8 badgeCount = 0;
+    s32 i;
+    for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+    {
+        if (FlagGet(i)){badgeCount++;}
+    }
+    return LevelCaps[badgeCount];
+}
+
 // Used in an unreferenced function in RS.
 // Unreferenced here and in FRLG.
 struct CombinedMove
@@ -4639,7 +4650,7 @@ void RemoveBattleMonPPBonus(struct BattlePokemon *mon, u8 moveIndex)
 void CopyPlayerPartyMonToBattleData(u8 battlerId, u8 partyIndex)
 {
     u16 *hpSwitchout;
-    s32 i;
+    u8 i;
     u8 nickname[POKEMON_NAME_BUFFER_SIZE];
 
     gBattleMons[battlerId].species = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES, NULL);
@@ -4891,16 +4902,10 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
             if ((itemEffect[i] & ITEM3_LEVEL_UP)
              && GetMonData(mon, MON_DATA_LEVEL, NULL) != MAX_LEVEL)
             {
-                u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
+                
                 u8 Level = GetMonData(mon, MON_DATA_LEVEL, NULL);
-                u8 badgeCount = 0;
-                for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
-                {
-                    if (FlagGet(i))
-                        badgeCount++;
-                }
 
-                if (Level < LevelCaps[badgeCount]) {
+                if (Level < GetCurrentLevelCap()) {
                     dataUnsigned = gExperienceTables[gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES, NULL)].growthRate][GetMonData(mon, MON_DATA_LEVEL, NULL) + 1];
                     SetMonData(mon, MON_DATA_EXP, &dataUnsigned);
                     CalculateMonStats(mon);
