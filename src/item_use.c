@@ -1122,6 +1122,9 @@ void ItemUseInBattle_EnigmaBerry(u8 taskId)
     }
 }
 
+// new items
+
+
 void ItemUseOutOfBattle_CannotUse(u8 taskId)
 {
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);
