@@ -7,12 +7,27 @@ EventScript_PC::
 	goto EventScript_PCMainMenu
 	end
 
+EventScript_PCbag::
+	lockall
+	playse SE_PC_ON
+	msgbox Text_BootUpPC, MSGBOX_DEFAULT
+	goto EventScript_PCMainMenubag
+	end
+
 EventScript_PCMainMenu::
 	message gText_WhichPCShouldBeAccessed
 	waitmessage
 	special ScriptMenu_CreatePCMultichoice
 	waitstate
 	goto EventScript_AccessPC
+	end
+
+EventScript_PCMainMenubag::
+	message gText_WhichPCShouldBeAccessed
+	waitmessage
+	special ScriptMenu_CreatePCMultichoice
+	waitstate
+	goto EventScript_AccessPCbag
 	end
 
 EventScript_AccessPC::
@@ -24,6 +39,14 @@ EventScript_AccessPC::
 	case MULTI_B_PRESSED, EventScript_TurnOffPC
 	end
 
+EventScript_AccessPCbag::
+	switch VAR_RESULT
+	case 0, EventScript_AccessPokemonStoragebag
+	case 1, EventScript_AccessPlayersPCbag
+	case 2, EventScript_TurnOffPCbag
+	case MULTI_B_PRESSED, EventScript_TurnOffPCbag
+	end
+
 EventScript_AccessPlayersPC::
 	playse SE_PC_LOGIN
 	msgbox gText_AccessedPlayersPC, MSGBOX_DEFAULT
@@ -31,6 +54,15 @@ EventScript_AccessPlayersPC::
 	waitstate
 	goto EventScript_PCMainMenu
 	end
+
+EventScript_AccessPlayersPCbag::
+	playse SE_PC_LOGIN
+	msgbox gText_AccessedPlayersPC, MSGBOX_DEFAULT
+	special PlayerPC
+	waitstate
+	goto EventScript_PCMainMenubag
+	end
+
 
 EventScript_AccessPokemonStorage::
 	playse SE_PC_LOGIN
@@ -40,6 +72,16 @@ EventScript_AccessPokemonStorage::
 	special ShowPokemonStorageSystemPC
 	waitstate
 	goto EventScript_PCMainMenu
+	end
+
+EventScript_AccessPokemonStoragebag::
+	playse SE_PC_LOGIN
+	call_if_unset FLAG_SYS_PC_LANETTE, EventScript_AccessSomeonesPC
+	call_if_set FLAG_SYS_PC_LANETTE, EventScript_AccessLanettesPC
+	msgbox gText_StorageSystemOpened, MSGBOX_DEFAULT
+	special ShowPokemonStorageSystemPC
+	waitstate
+	goto EventScript_PCMainMenubag
 	end
 
 EventScript_AccessSomeonesPC::
@@ -54,6 +96,11 @@ EventScript_TurnOffPC::
 	setvar VAR_0x8004, PC_LOCATION_OTHER
 	playse SE_PC_OFF
 	special DoPCTurnOffEffect
+	releaseall
+	end
+
+EventScript_TurnOffPCbag::
+	playse SE_PC_OFF
 	releaseall
 	end
 

@@ -33,7 +33,7 @@ void ItemUseInBattle_EnigmaBerry(u8);
 void Task_UseDigEscapeRopeOnField(u8 taskId);
 
 // new items
-
+void ItemUseOutOfBattle_PCBox(u8);
 
 u8 CanUseDigOrEscapeRopeOnCurMap(void);
 u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId);

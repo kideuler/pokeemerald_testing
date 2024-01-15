@@ -1554,3 +1554,9 @@ static const u8 sIRC[] = _(
     "an infinite use\n"
     "rare candy."
     );
+
+static const u8 sPCBoxDesc[] = _(
+    "A pokemon PC\n"
+    "was a bitch to get\n"
+    "to get working.\n"
+    );

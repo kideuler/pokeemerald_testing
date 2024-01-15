@@ -71,6 +71,9 @@ static void Task_CloseCantUseKeyItemMessage(u8);
 static void SetDistanceOfClosestHiddenItem(u8, s16, s16);
 static void CB2_OpenPokeblockFromBag(void);
 
+//new
+static void ItemUseCB_PCBox(u8 taskId);
+
 // EWRAM variables
 EWRAM_DATA static void(*sItemUseOnFieldCB)(u8 taskId) = NULL;
 
@@ -1123,7 +1126,28 @@ void ItemUseInBattle_EnigmaBerry(u8 taskId)
 }
 
 // new items
+extern u8 EventScript_PCbag[];
 
+void ItemUseOutOfBattle_PCBox(u8 taskId)
+{
+    if (!gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        sItemUseOnFieldCB = ItemUseCB_PCBox;
+        gFieldCallback = FieldCB_UseItemOnField;
+        gBagMenu->newScreenCallback = CB2_ReturnToField;
+        Task_FadeAndCloseBagMenu(taskId);
+    } else {
+        sItemUseOnFieldCB = ItemUseCB_PCBox;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
+}
+
+void ItemUseCB_PCBox(u8 taskId)
+{
+    LockPlayerFieldControls();
+    ScriptContext_SetupScript(EventScript_PCbag);
+    DestroyTask(taskId);
+}
 
 void ItemUseOutOfBattle_CannotUse(u8 taskId)
 {

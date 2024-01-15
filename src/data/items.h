@@ -4551,4 +4551,17 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
     },
 
+    [ITEM_PC_BOX] =
+    {
+        .name = _("PC BOX"),
+        .itemId = ITEM_PC_BOX,
+        .price = 0,
+        .description = sPCBoxDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_PCBox,
+    },
+
 };
