@@ -52,6 +52,9 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 
+#include "constants/flags.h"
+#include "event_data.h"
+
 extern const u8 *const gBattleScriptsForMoveEffects[];
 
 #define DEFENDER_IS_PROTECTED ((gProtectStructs[gBattlerTarget].protected) && (gBattleMoves[gCurrentMove].flags & FLAG_PROTECT_AFFECTED))
@@ -3274,6 +3277,14 @@ static void Cmd_getexp(void)
         {
             u16 calculatedExp;
             s32 viaSentIn;
+            u8 LevelCaps[9] = {15,19,25,30,32,36,42,46,100};
+            u8 badgeCount = 0;
+            u8 GetExp = 1;
+            s32 i;
+            for (i = FLAG_BADGE01_GET; i < FLAG_BADGE01_GET + NUM_BADGES; i++)
+            {
+                if (FlagGet(i)){badgeCount++;}
+            }
 
             for (viaSentIn = 0, i = 0; i < PARTY_SIZE; i++)
             {
@@ -3291,9 +3302,16 @@ static void Cmd_getexp(void)
 
                 if (holdEffect == HOLD_EFFECT_EXP_SHARE)
                     viaExpShare++;
+                
+                if ((gBitTable[i] & sentIn) && GetMonData(&gPlayerParty[i], MON_DATA_LEVEL) >= LevelCaps[badgeCount])
+                    GetExp = 0;
             }
-
-            calculatedExp = gSpeciesInfo[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level / 7;
+            
+            if (GetExp){
+                calculatedExp = gSpeciesInfo[gBattleMons[gBattlerFainted].species].expYield * gBattleMons[gBattlerFainted].level / 7;
+            } else {
+                calculatedExp = 0;
+            }
 
             if (viaExpShare) // at least one mon is getting exp via exp share
             {
