@@ -1560,3 +1560,8 @@ static const u8 sPCBoxDesc[] = _(
     "was a bitch to get\n"
     "to get working.\n"
     );
+
+static const u8 sMoveTutorDesc[] = _(
+    "A move tutor\n"
+    "on the go\n"
+    );

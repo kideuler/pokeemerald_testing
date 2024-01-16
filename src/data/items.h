@@ -4564,4 +4564,17 @@ const struct Item gItems[] =
         .fieldUseFunc = ItemUseOutOfBattle_PCBox,
     },
 
+    [ITEM_MOVE_TUTOR] =
+    {
+        .name = _("MOVE TUTOR"),
+        .itemId = ITEM_MOVE_TUTOR,
+        .price = 0,
+        .description = sMoveTutorDesc,
+        .importance = 1,
+        .registrability = TRUE,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_MoveTutor,
+    },
+
 };

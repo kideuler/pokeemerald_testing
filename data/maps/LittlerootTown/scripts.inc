@@ -905,6 +905,7 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	setflag FLAG_RECEIVED_RUNNING_SHOES
 	giveitem ITEM_INFINITE_RARE_CANDY
 	giveitem ITEM_PC_BOX
+	giveitem ITEM_MOVE_TUTOR
 	msgbox LittlerootTown_Text_ExplainRunningShoes, MSGBOX_DEFAULT
 	msgbox LittlerootTown_Text_ComeHomeIfAnythingHappens, MSGBOX_DEFAULT
 	closemessage

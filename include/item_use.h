@@ -34,6 +34,7 @@ void Task_UseDigEscapeRopeOnField(u8 taskId);
 
 // new items
 void ItemUseOutOfBattle_PCBox(u8);
+void ItemUseOutOfBattle_MoveTutor(u8);
 
 u8 CanUseDigOrEscapeRopeOnCurMap(void);
 u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId);

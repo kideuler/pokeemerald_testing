@@ -73,6 +73,7 @@ static void CB2_OpenPokeblockFromBag(void);
 
 //new
 static void ItemUseCB_PCBox(u8 taskId);
+static void ItemUseCB_MoveTutor(u8 taskId);
 
 // EWRAM variables
 EWRAM_DATA static void(*sItemUseOnFieldCB)(u8 taskId) = NULL;
@@ -1127,7 +1128,6 @@ void ItemUseInBattle_EnigmaBerry(u8 taskId)
 
 // new items
 extern u8 EventScript_PCbag[];
-
 void ItemUseOutOfBattle_PCBox(u8 taskId)
 {
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
@@ -1141,11 +1141,32 @@ void ItemUseOutOfBattle_PCBox(u8 taskId)
         SetUpItemUseOnFieldCallback(taskId);
     }
 }
-
 void ItemUseCB_PCBox(u8 taskId)
 {
     LockPlayerFieldControls();
     ScriptContext_SetupScript(EventScript_PCbag);
+    DestroyTask(taskId);
+}
+
+
+extern u8 EventScript_TutorBag[];
+void ItemUseOutOfBattle_MoveTutor(u8 taskId)
+{
+    if (!gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        sItemUseOnFieldCB = ItemUseCB_MoveTutor;
+        gFieldCallback = FieldCB_UseItemOnField;
+        gBagMenu->newScreenCallback = CB2_ReturnToField;
+        Task_FadeAndCloseBagMenu(taskId);
+    } else {
+        sItemUseOnFieldCB = ItemUseCB_PCBox;
+        SetUpItemUseOnFieldCallback(taskId);
+    }
+}
+void ItemUseCB_MoveTutor(u8 taskId)
+{
+    LockPlayerFieldControls();
+    ScriptContext_SetupScript(EventScript_TutorBag);
     DestroyTask(taskId);
 }
 
