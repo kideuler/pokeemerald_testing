@@ -1414,6 +1414,7 @@ const s8 gNatureStatTable[NUM_NATURES][NUM_NATURE_STATS] =
 #include "data/pokemon/evolution.h"
 #include "data/pokemon/level_up_learnset_pointers.h"
 
+
 // SPECIES_NONE are ignored in the following two tables, so decrement before accessing these arrays to get the right result
 
 static const u8 sMonFrontAnimIdsTable[NUM_SPECIES - 1] =
@@ -6311,6 +6312,12 @@ u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves)
                 if (k == numMoves)
                     moves[numMoves++] = gLevelUpLearnsets[species][i] & LEVEL_UP_MOVE_ID;
             }
+        }
+    }
+
+    for (i = ITEM_TM01; i < ITEM_HM01; i++){
+        if (CanMonLearnTMHM(mon, i-ITEM_TM01)){
+            moves[numMoves++] = ItemIdToBattleMoveId(i);
         }
     }
 
